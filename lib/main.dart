@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:grabby_app/models/category_model.dart';
 import 'package:grabby_app/data/restaurant_mock_data.dart';
 import 'package:grabby_app/core/constant/app_routes.dart';
 import 'package:grabby_app/core/constant/app_string.dart';
@@ -33,19 +34,67 @@ import 'services/storage_service.dart';
 Future<void> uploadMockData() async {
   final firestore = FirebaseFirestore.instance;
   final restaurants = SampleData.getRestaurants();
-
-  // Use a batch write for efficiency
   final batch = firestore.batch();
 
-  for (var restaurant in restaurants) {
-    // Create a document reference for each restaurant in the 'restaurants' collection
-    final docRef = firestore.collection('restaurants').doc(restaurant.id);
-    batch.set(docRef, restaurant.toJson());
+  // --- 1. Process and Upload Restaurants ---
+  for (final restaurant in restaurants) {
+    final restaurantRef = firestore
+        .collection('restaurants')
+        .doc(restaurant.id);
+    batch.set(restaurantRef, restaurant.toJson());
   }
+  debugPrint('Restaurants prepared for batch upload.');
+
+  // --- 2. Process and Upload Products (from MenuItems) and Categories ---
+  final Set<String> categoryNames = {};
+  for (final restaurant in restaurants) {
+    for (final menuItem in restaurant.menuItems) {
+      // Add category to a set to ensure uniqueness
+      categoryNames.add(menuItem.category);
+
+      // Convert MenuItem to ProductModelScreens
+      final product = ProductModelScreens(
+        id: '${restaurant.id}_${menuItem.id}', // Create a unique product ID
+        name: menuItem.name,
+        description: menuItem.description,
+        price: menuItem.price.toDouble(),
+        image: menuItem.imageUrl,
+        categoryId: menuItem.category.toLowerCase().replaceAll(' ', '_'),
+        categoryName: menuItem.category,
+        sellerId: restaurant.id,
+        sellerName: restaurant.name,
+        rating: restaurant.rating, // Inherit rating from restaurant for now
+        reviewCount: restaurant.reviewCount,
+        deliveryTime: int.tryParse(restaurant.deliveryTime.split('-')[0]),
+        deliveryFee: restaurant.deliveryFee.toDouble(),
+        isFavorite: menuItem.isFavorite,
+      );
+
+      final productRef = firestore.collection('products').doc(product.id);
+      batch.set(productRef, product.toJson());
+    }
+  }
+  debugPrint('Products prepared for batch upload.');
+
+  // --- 3. Create Category Documents ---
+  for (final categoryName in categoryNames) {
+    final categoryId = categoryName.toLowerCase().replaceAll(' ', '_');
+    final category = CategoryModel(
+      id: categoryId,
+      name: categoryName,
+      icon: 'assets/icons/default_category.png', // Placeholder icon
+      decs: 'Delicious $categoryName',
+    );
+    final categoryRef = firestore.collection('categories').doc(categoryId);
+    batch.set(categoryRef, category.toJson());
+  }
+  debugPrint('Categories prepared for batch upload.');
 
   try {
     await batch.commit();
-    debugPrint('✅ Successfully uploaded mock data to Firestore!');
+    debugPrint(
+      '✅ Successfully uploaded Restaurants, Products, and Categories!',
+    );
   } catch (e) {
     debugPrint('❌ Error uploading mock data: $e');
   }
@@ -60,7 +109,7 @@ void main() async {
   await Firebase.initializeApp();
 
   // TODO: Run this once to upload data, then REMOVE this line.
-  // await uploadMockData();
+  await uploadMockData();
 
   runApp(const MyApp());
 }

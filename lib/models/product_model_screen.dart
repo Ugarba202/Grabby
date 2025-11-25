@@ -71,23 +71,30 @@ class ProductModelScreens {
 
   // TO JSON (Dart object → Firestore)
   Map<String, dynamic> toJson() {
-    return {
-      // Don't include 'id' here - Firestore generates it
+    final Map<String, dynamic> jsonMap = {
       'name': name,
       'description': description,
       'price': price,
       'image': image,
-      'additionalImages': additionalImages,
       'categoryId': categoryId,
       'categoryName': categoryName,
       'sellerId': sellerId,
       'sellerName': sellerName,
       'rating': rating,
       'reviewCount': reviewCount,
-      'deliveryTime': deliveryTime,
-      'deliveryFee': deliveryFee,
       'isFavorite': isFavorite,
       'createdAt': FieldValue.serverTimestamp(), // Firestore timestamp
     };
+
+    if (additionalImages != null && additionalImages!.isNotEmpty) {
+      jsonMap['additionalImages'] = additionalImages;
+    }
+    if (deliveryTime != null) {
+      jsonMap['deliveryTime'] = deliveryTime;
+    }
+    if (deliveryFee != null) {
+      jsonMap['deliveryFee'] = deliveryFee;
+    }
+    return jsonMap;
   }
 }

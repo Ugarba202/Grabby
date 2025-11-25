@@ -26,7 +26,7 @@ class FirestoreService {
 
   /// Fetches a list of restaurants from Firestore.
   Future<List<RestaurantProfileModel>> getRestaurants() async {
-    try {
+    try { 
       final snapshot = await _db.collection('restaurants').get();
       if (snapshot.docs.isEmpty) {
         debugPrint('No restaurants found in Firestore.');
@@ -45,12 +45,17 @@ class FirestoreService {
   Future<List<ProductModelScreens>> getProductsByCategory(
     String categoryId,
   ) async {
-    final snapshot = await _db
-        .collection('products')
-        .where('categoryId', isEqualTo: categoryId)
-        .get();
-    return snapshot.docs
-        .map((doc) => ProductModelScreens.fromJson(doc.data()))
-        .toList();
+    try {
+      final snapshot = await _db
+          .collection('products')
+          .where('categoryId', isEqualTo: categoryId)
+          .get();
+      return snapshot.docs
+          .map((doc) => ProductModelScreens.fromJson(doc.data()))
+          .toList();
+    } catch (e) {
+      debugPrint('Error fetching products for category $categoryId: $e');
+      rethrow;
+    }
   }
 }
