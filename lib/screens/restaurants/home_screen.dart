@@ -2,14 +2,13 @@
 // FILE: lib/screens/home_screen.dart
 // PURPOSE: Display list of restaurants
 // ============================================================================
+import 'package:grabby_app/core/constant/app_routes.dart';
 
 import 'package:flutter/material.dart';
 import 'package:grabby_app/models/restaurant_profile_model.dart';
-import '../../data/restaurant_mock_data.dart';
-
 import '../../widgets/restaurant_card.dart';
+import '../../services/restaurant_service.dart';
 import '../restaurant_profile_screen.dart';
-
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,14 +18,14 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // Get the list of restaurants from sample data
-  late List<RestaurantProfileModel> restaurants;
+  // Future to hold the list of restaurants from Firestore
+  late Future<List<RestaurantProfileModel>> _restaurantsFuture;
 
   @override
   void initState() {
     super.initState();
-    // Load restaurants when screen opens
-    restaurants = SampleData.getRestaurants();
+    // Fetch restaurants when the screen initializes
+    _restaurantsFuture = RestaurantService.instance.getRestaurants();
   }
 
   @override
@@ -50,10 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
           // Search button
           IconButton(
             icon: const Icon(Icons.search, color: Colors.black),
-            onPressed: () {
-              // TODO: Add search functionality
-              print('Search tapped');
-            },
+            onPressed: () => Navigator.pushNamed(context, AppRoutes.search),
           ),
           // Filter button
           IconButton(
@@ -67,20 +63,34 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
 
       // Body - List of restaurants
-      body: ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: restaurants.length,
-        itemBuilder: (context, index) {
-          final restaurant = restaurants[index];
-
-          // Use the RestaurantCard widget we created
-          return RestaurantCard(
-            restaurant: restaurant,
-
-            // What happens when user taps the card?
-            onTap: () {
-              // Navigate to restaurant profile screen
-              _navigateToRestaurantProfile(restaurant);
+      body: FutureBuilder<List<RestaurantProfileModel>>(
+        future: _restaurantsFuture,
+        builder: (context, snapshot) {
+          // 1. Show a loading indicator
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          // 2. Show an error message
+          if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          }
+          // 3. Show a message if no data is found
+          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('No restaurants found.'));
+          }
+          // 4. Display the list of restaurants
+          final restaurants = snapshot.data!;
+          return ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: restaurants.length,
+            itemBuilder: (context, index) {
+              final restaurant = restaurants[index];
+              return RestaurantCard(
+                restaurant: restaurant,
+                onTap: () {
+                  _navigateToRestaurantProfile(restaurant);
+                },
+              );
             },
           );
         },
@@ -100,4 +110,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-

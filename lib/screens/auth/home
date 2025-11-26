@@ -3,7 +3,7 @@ import 'package:grabby_app/core/constant/app_colors.dart';
 import 'package:grabby_app/core/constant/app_routes.dart';
 import 'package:grabby_app/core/constant/app_string.dart';
 import 'package:grabby_app/core/utils/validator.dart';
-
+import 'package:grabby_app/screens/home/main_screen.dart';
 import 'package:grabby_app/screens/onboaring/widgets/auth_header.dart';
 import 'package:grabby_app/screens/onboaring/widgets/custom_buttom.dart';
 import 'package:grabby_app/screens/onboaring/widgets/custom_checkbox.dart';
@@ -90,18 +90,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
         await StorageService.instance.setUserEmail(email);
         await StorageService.instance.setUserPhone(phone);
 
-        // Show success message and instruct user to check email
-        _showSucccess(
-          'Account created! Please check your email for a verification code.',
-        );
+        // Show success message
+        // _showSucccess(
+        //   'Account created! Please check your email for verification code.',
+        // );
 
         // Navigate to verification screen
         if (mounted) {
-          // Navigate to the VerificationScreen, passing the email
-          Navigator.pushReplacementNamed(
+          Navigator.pushReplacement(
             context,
-            AppRoutes.main_screen,
-            // arguments: email,
+            MaterialPageRoute(
+              builder: (context) => const MainScreen(),
+            ),
           );
         }
       } else {
@@ -186,56 +186,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        content: SingleChildScrollView(
-          // Make content scrollable
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: const [
-              Center(
-                child: Text(
-                  'Welcome to Grabby!',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-              SizedBox(height: 10),
-              Text(
-                'These terms and conditions outline the rules and regulations for the use of Grabby\'s mobile application.',
-              ),
-              SizedBox(height: 10),
-              Text(
-                'By accessing this app, we assume you accept these terms and conditions. Do not continue to use Grabby if you do not agree to take all of the terms and conditions stated on this page.',
-              ),
-              SizedBox(height: 16),
-              Text(
-                '1. Accounts',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 8),
-              Text(
-                'When you create an account with us, you must provide us with information that is accurate, complete, and current at all times. Failure to do so constitutes a breach of the Terms, which may result in immediate termination of your account on our Service.',
-              ),
-              SizedBox(height: 16),
-              Text(
-                '2. Orders and Payments',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 8),
-              Text(
-                'By placing an order through our app, you warrant that you are legally capable of entering into binding contracts. All payments are processed through a secure third-party payment gateway. We do not store your credit card details.',
-              ),
-              SizedBox(height: 16),
-              Text(
-                '3. Termination',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 8),
-              Text(
-                'We may terminate or suspend your account immediately, without prior notice or liability, for any reason whatsoever, including without limitation if you breach the Terms.',
-              ),
-            ],
-          ),
-        ),
+        title: const Text('Terms & Conditions'),
+        content: const Text('Terms and conditions content goes here...'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -297,7 +249,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   hint: 'FullName',
                   textCapitalization: TextCapitalization.words,
                   validator: Validators.validateName,
-                  autocorrect: false,
+                  autocorrect: false, // This will now work
                   enableSuggestions: false,
                 ),
 
@@ -311,7 +263,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   keyboardType: TextInputType.emailAddress,
                   validator: Validators.validateEmail,
                   textCapitalization: TextCapitalization.none,
-                  autocorrect: false,
+                  autocorrect: false, // This will now work
                   enableSuggestions: false,
                 ),
 

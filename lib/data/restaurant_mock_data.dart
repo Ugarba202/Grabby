@@ -19,7 +19,8 @@ class SampleData {
       name: 'Cactus Restaurant ',
       description: 'International, Vegetarian Friendly, Vegan Options',
 
-      imagePath: AppImages.restau1,
+      imagePath:
+          'https://storage.googleapis.com/your-project.appspot.com/images/restau1.png', // <-- PASTE URL HERE
       rating: 4.5,
       reviewCount: 281,
       deliveryTime: '30-45 min',

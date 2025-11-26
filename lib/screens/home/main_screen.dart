@@ -119,7 +119,7 @@ class HomeScreenState extends State<MainScreen> {
                     actionText: 'View all',
                     onPressed: () => Navigator.pushReplacementNamed(
                       context,
-                      AppRoutes.categorysecreen,
+                      AppRoutes.categories,
                     ),
                   ),
 

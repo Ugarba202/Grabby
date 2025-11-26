@@ -31,4 +31,5 @@ class AppRoutes {
   static const String menuItemDetails = '/menu-item-details';
   static const String restaurantProfile = '/restaurant-profile';
   static const String shopingCart = '/shopping_cart_screen';
+  static const String search = '/search_screen';
 }

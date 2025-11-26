@@ -18,6 +18,8 @@ class CustomTextField extends StatefulWidget {
   final VoidCallback? onTap;
   final Function(String)? onChanged;
   final TextCapitalization textCapitalization;
+  final bool autocorrect;
+  final bool enableSuggestions;
 
   const CustomTextField({
     super.key,
@@ -35,6 +37,8 @@ class CustomTextField extends StatefulWidget {
     this.onTap,
     this.onChanged,
     this.textCapitalization = TextCapitalization.none,
+    this.autocorrect = true,
+    this.enableSuggestions = true,
   });
 
   @override
@@ -98,6 +102,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
           onTap: widget.onTap,
           onChanged: widget.onChanged,
           textCapitalization: widget.textCapitalization,
+          autocorrect: widget.autocorrect,
+          enableSuggestions: widget.enableSuggestions,
 
           // Text style with proper height
           style: TextStyle(

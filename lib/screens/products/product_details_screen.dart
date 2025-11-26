@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../core/constant/app_colors.dart';
 import '../../models/product_model_screen.dart';
 import '../../models/cart_item_model.dart';
 import '../../services/cart_services.dart';
+import '../../services/favorite_service.dart';
 import '../home/shoping_cart_screen.dart';
 
 class ProductDetailScreen extends StatefulWidget {
@@ -70,6 +72,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Get the FavoriteService instance from the provider
+    final favoriteService = Provider.of<FavoriteService>(context);
+    final isFavorite = favoriteService.isFavorite(widget.product.id);
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -87,21 +93,33 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         actions: [
           IconButton(
             icon: Icon(
-              widget.product.isFavorite
-                  ? Icons.favorite
-                  : Icons.favorite_border,
-              color: widget.product.isFavorite
-                  ? AppColors.softblue
-                  : Colors.grey,
+              isFavorite ? Icons.favorite : Icons.favorite_border,
+              color: isFavorite ? Colors.red : Colors.grey,
             ),
-            onPressed: () {
-              setState(() {
-                widget.product.isFavorite = !widget.product.isFavorite;
-              });
+            onPressed: () async {
+              // Use the service to toggle the favorite status
+              final wasAdded = await favoriteService.toggleFavorite(
+                widget.product,
+              );
+
+              // Show a snackbar only if the item was added
+              if (mounted && wasAdded) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('${widget.product.name} added to favorites!'),
+                    backgroundColor: AppColors.success,
+                    behavior: SnackBarBehavior.floating,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                );
+              }
             },
           ),
         ],
       ),
+
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

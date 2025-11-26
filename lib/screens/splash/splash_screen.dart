@@ -3,7 +3,6 @@ import 'dart:async';
 import '../../core/constant/app_colors.dart';
 import '../../core/constant/app_routes.dart';
 import '../../core/constant/app_string.dart';
-
 import '../../core/constant/app_text_style.dart';
 import '../../services/storage_service.dart';
 
@@ -45,7 +44,7 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   void _navigateToNext() {
-    Timer(const Duration(seconds: 3), () {
+    Timer(const Duration(seconds: 5), () {
       if (!mounted) return;
 
       // Check onboarding status
@@ -61,7 +60,9 @@ class _SplashScreenState extends State<SplashScreen>
         Navigator.of(context).pushReplacementNamed(AppRoutes.onboarding);
       } else if (isLoggedIn) {
         // Returning logged-in user → Go directly to home
-        Navigator.of(context).pushReplacementNamed(AppRoutes.login);
+        Navigator.of(context).pushReplacementNamed(
+          AppRoutes.login,
+        ); // chnage this to login later
       } else {
         // Returning user, not logged in → Show login
         Navigator.of(context).pushReplacementNamed(AppRoutes.login);

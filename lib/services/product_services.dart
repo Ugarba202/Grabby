@@ -1,5 +1,3 @@
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import '../models/product_model_screen.dart';
@@ -49,17 +47,19 @@ class ProductService extends ChangeNotifier {
       return _allProducts;
     } catch (e) {
       _error = e.toString();
-      _isLoading = false;
       notifyListeners();
       print('❌ Error fetching products: $e');
-      return [];
+      // Rethrow the exception to be handled by the UI
+      rethrow;
     }
   }
 
   // ============================================================================
   // FETCH PRODUCTS BY CATEGORY
   // ============================================================================
-  Future<List<ProductModelScreens>> getProductsByCategory(String categoryId) async {
+  Future<List<ProductModelScreens>> getProductsByCategory(
+    String categoryId,
+  ) async {
     try {
       print('📦 Fetching products for category: $categoryId');
 
@@ -98,7 +98,7 @@ class ProductService extends ChangeNotifier {
 
       final data = doc.data()!;
       data['id'] = doc.id;
-      
+
       return ProductModelScreens.fromJson(data);
     } catch (e) {
       print('❌ Error fetching product: $e');
@@ -141,13 +141,21 @@ class ProductService extends ChangeNotifier {
     try {
       print('➕ Adding product: ${product.name}');
 
-      await _firestore.collection('products').add(product.toJson());
+      final docRef = await _firestore
+          .collection('products')
+          .add(product.toJson());
 
       print('✅ Product added successfully');
-      
-      // Refresh cache
-      await getAllProducts();
-      
+
+      // Add to local cache to avoid re-fetching all products
+      // Create a new ProductModelScreens instance that includes the generated doc ID
+      final productWithId = ProductModelScreens.fromJson({
+        ...product.toJson(),
+        'id': docRef.id,
+      });
+      _allProducts.add(productWithId);
+      notifyListeners();
+
       return true;
     } catch (e) {
       print('❌ Error adding product: $e');
@@ -158,17 +166,26 @@ class ProductService extends ChangeNotifier {
   // ============================================================================
   // UPDATE PRODUCT (Admin function)
   // ============================================================================
-  Future<bool> updateProduct(String productId, Map<String, dynamic> updates) async {
+  Future<bool> updateProduct(
+    String productId,
+    Map<String, dynamic> updates,
+  ) async {
     try {
       print('✏️ Updating product: $productId');
 
       await _firestore.collection('products').doc(productId).update(updates);
 
       print('✅ Product updated successfully');
-      
-      // Refresh cache
-      await getAllProducts();
-      
+
+      // Update in local cache
+      final index = _allProducts.indexWhere((p) => p.id == productId);
+      if (index != -1) {
+        // For a full refresh of the object, you might need to fetch it again
+        // or apply the updates to the local model.
+        // For simplicity, we'll just refetch all for now, but direct update is better.
+        await getAllProducts(); // Or update _allProducts[index] manually
+      }
+
       return true;
     } catch (e) {
       print('❌ Error updating product: $e');
@@ -186,10 +203,11 @@ class ProductService extends ChangeNotifier {
       await _firestore.collection('products').doc(productId).delete();
 
       print('✅ Product deleted successfully');
-      
-      // Refresh cache
-      await getAllProducts();
-      
+
+      // Remove from local cache
+      _allProducts.removeWhere((p) => p.id == productId);
+      notifyListeners();
+
       return true;
     } catch (e) {
       print('❌ Error deleting product: $e');
@@ -218,4 +236,3 @@ class ProductService extends ChangeNotifier {
     notifyListeners();
   }
 }
-

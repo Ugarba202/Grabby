@@ -62,43 +62,39 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
   void _showCountryPicker() {
     showModalBottomSheet(
       context: context,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
+      backgroundColor: Colors.white,
       builder: (context) {
         return Container(
-          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+          // Let the column handle padding
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                'Select Country Code',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.textPrimary,
+              // Title with padding
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 20.0),
+                child: Text(
+                  'Select Country',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.textPrimary,
+                  ),
                 ),
               ),
-              const SizedBox(height: 16),
+              const Divider(height: 1),
+
+              // Compact List of countries
               Flexible(
                 child: ListView.builder(
                   shrinkWrap: true,
                   itemCount: _countryCodes.length,
                   itemBuilder: (context, index) {
                     final country = _countryCodes[index];
-                    return ListTile(
-                      leading: Text(
-                        country.flag,
-                        style: TextStyle(fontSize: 28),
-                      ),
-                      title: Text(country.name),
-                      trailing: Text(
-                        country.code,
-                        style: TextStyle(
-                          color: AppColors.textSecondary,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
+                    // Use InkWell + Row for a compact, custom list item
+                    return InkWell(
                       onTap: () {
                         setState(() {
                           _selectedCountryCode = country.code;
@@ -106,6 +102,33 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
                         widget.onCountryChanged?.call(country.code);
                         Navigator.pop(context);
                       },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24.0,
+                          vertical: 16.0,
+                        ),
+                        child: Row(
+                          children: [
+                            Text(
+                              country.flag,
+                              style: const TextStyle(fontSize: 24),
+                            ),
+                            const SizedBox(width: 16),
+                            Text(
+                              country.name,
+                              style: const TextStyle(fontSize: 16),
+                            ),
+                            const Spacer(),
+                            Text(
+                              country.code,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: AppColors.textSecondary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     );
                   },
                 ),
@@ -138,7 +161,7 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
               onTap: _showCountryPicker,
               borderRadius: BorderRadius.circular(12),
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 14, vertical: 18),
+                padding: EdgeInsets.symmetric(horizontal: 14, vertical: 26),
                 decoration: BoxDecoration(
                   color: Color(0xFFF5F5F5),
                   borderRadius: BorderRadius.circular(10),

@@ -7,7 +7,6 @@ import 'package:grabby_app/core/utils/validator.dart';
 import 'package:grabby_app/widgets/custom_text_field_login.dart';
 import 'package:grabby_app/services/storage_service.dart';
 import 'package:grabby_app/services/auth_services.dart';
-
 import '../onboaring/widgets/social_login_button.dart';
 import '../../core/constant/app_string.dart';
 
@@ -144,7 +143,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 // Email field
                 CustomTextField(
                   controller: _emailController,
-                  hintText: 'Email',
+                  hintText: 'Enter your email',
                   keyboardType: TextInputType.emailAddress,
                   validator: Validators.validateEmail,
                 ),
@@ -158,7 +157,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   isPassword: true,
                   obscureText: _obscurePassword,
                   validator: Validators.validatePassword,
-                  hintText: 'Password',
+                  hintText: 'Enter your password',
                   suffixIcon: IconButton(
                     icon: Icon(
                       _obscurePassword
