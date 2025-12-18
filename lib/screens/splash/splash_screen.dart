@@ -4,6 +4,7 @@ import '../../core/constant/app_colors.dart';
 import '../../core/constant/app_routes.dart';
 import '../../core/constant/app_string.dart';
 import '../../core/constant/app_text_style.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../../services/storage_service.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -44,6 +45,7 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   void _navigateToNext() {
+    // Short splash delay (animation is ~1.5s)
     Timer(const Duration(seconds: 5), () {
       if (!mounted) return;
 
@@ -51,18 +53,18 @@ class _SplashScreenState extends State<SplashScreen>
       final bool onboardingComplete = StorageService.instance
           .isOnboardingComplete();
 
-      // Check login status
-      final bool isLoggedIn = StorageService.instance.isLoggedIn();
+      // Check login status (also consider Firebase's currentUser)
+      final bool isLoggedIn =
+          FirebaseAuth.instance.currentUser != null ||
+          StorageService.instance.isLoggedIn();
 
-      // Decision tree:
+      // Decide where to navigate next
       if (!onboardingComplete) {
         // First time user → Show onboarding
         Navigator.of(context).pushReplacementNamed(AppRoutes.onboarding);
       } else if (isLoggedIn) {
-        // Returning logged-in user → Go directly to home
-        Navigator.of(context).pushReplacementNamed(
-          AppRoutes.login,
-        ); // chnage this to login later
+        // Returning logged-in user → Go to main/home screen
+        Navigator.of(context).pushReplacementNamed(AppRoutes.main_screen);
       } else {
         // Returning user, not logged in → Show login
         Navigator.of(context).pushReplacementNamed(AppRoutes.login);

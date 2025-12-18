@@ -1,12 +1,15 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:grabby_app/core/constant/app_routes.dart';
 import 'package:grabby_app/core/constant/app_string.dart';
 import 'package:grabby_app/screens/onboaring/widgets/primary_bottom.dart';
 import 'package:grabby_app/screens/onboaring/widgets/text_button_link.dart';
 import 'package:grabby_app/core/utils/location_helper.dart';
+import 'package:grabby_app/services/user_service.dart';
+import 'package:provider/provider.dart';
 
 class EnableLocationScreen extends StatefulWidget {
   const EnableLocationScreen({super.key});
@@ -178,8 +181,15 @@ class _EnableLocationScreenState extends State<EnableLocationScreen> {
                         child: PrimaryButton(
                           text: "Confirm Location",
                           onPressed: () async {
-                            // Here you would save the _selectedPosition
-                            // For now, we just navigate to the main screen
+                            // Save the selected location to the user's profile
+                            final userService = context.read<UserService>();
+                            await userService.updateUserProfile({
+                              'location': GeoPoint(
+                                _selectedPosition.latitude,
+                                _selectedPosition.longitude,
+                              ),
+                            });
+
                             debugPrint(
                               'Selected Location: ${_selectedPosition.latitude}, ${_selectedPosition.longitude}',
                             );

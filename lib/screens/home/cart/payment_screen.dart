@@ -177,6 +177,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
             hintText: '1234 5678 9012 3456',
             prefixIcon: const Icon(Icons.credit_card),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 18,
+            ),
           ),
           validator: (value) {
             if (value == null || value.isEmpty) {
@@ -199,6 +203,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
             hintText: 'John Doe',
             prefixIcon: const Icon(Icons.person),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 18,
+            ),
           ),
           validator: (value) {
             if (value == null || value.isEmpty) {
@@ -228,6 +236,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 18,
+                  ),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -253,6 +265,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   prefixIcon: const Icon(Icons.lock),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 18,
                   ),
                 ),
                 validator: (value) {
@@ -290,6 +306,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
             hintText: '0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb',
             prefixIcon: const Icon(Icons.account_balance_wallet),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 18,
+            ),
           ),
           validator: (value) {
             if (value == null || value.isEmpty) {
@@ -568,4 +588,3 @@ class _ExpiryDateFormatter extends TextInputFormatter {
 // - Flutterwave (https://flutterwave.com)
 // - Stripe (https://stripe.com)
 //
-

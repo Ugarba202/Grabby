@@ -1,5 +1,6 @@
 // import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 // import 'package:grabby_app/models/category_model.dart';
@@ -32,8 +33,6 @@ import 'services/auth_service.dart';
 import 'services/user_service.dart';
 import 'services/favorite_service.dart';
 import 'services/storage_service.dart';
-
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -70,7 +69,7 @@ class MyApp extends StatelessWidget {
       title: AppStrings.appName,
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
-      initialRoute: AppRoutes.login, // Let's start at the login screen to test
+      initialRoute: AppRoutes.splash,
       routes: {
         AppRoutes.splash: (context) => const SplashScreen(),
         AppRoutes.onboarding: (context) => const OnboardingScreen(),
@@ -106,7 +105,7 @@ class MyApp extends StatelessWidget {
           final args = settings.arguments as Map<String, String>?;
           return MaterialPageRoute(
             builder: (context) => CategoryScreen(
-              // Use default values if args are null
+              // Use default values i f args are null
               categoryId: args?['categoryId'] ?? '',
               categoryName: args?['categoryName'] ?? 'Category',
             ),
@@ -122,7 +121,7 @@ class MyApp extends StatelessWidget {
           final args = settings.arguments as Map<String, dynamic>;
           return MaterialPageRoute(
             builder: (context) => MenuItemDetailScreen(
-              menuItem: args['menuItem'] as MenuItem,
+              menuItem: args['men uItem'] as MenuItem,
               restaurantName: args['restaurantName'] as String,
               restaurantId: args['restaurantId'] as String?,
               deliveryTime: args['deliveryTime'] as int?,

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:grabby_app/core/constant/app_images.dart';
 import 'package:grabby_app/core/constant/app_routes.dart';
 import 'package:grabby_app/core/constant/app_string.dart'; // This is the mock data for categories and products
 import 'package:grabby_app/data/restaurant_mock_data.dart';
@@ -30,7 +29,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<MainScreen> {
-  // Mock Data
+  // Mock Data 
   final List<CategoryModel> categories = MockData.categories.take(12).toList();
   final List<ProductModel> products = MockData.products;
   final List<RestaurantProfileModel> restaurants = SampleData.getRestaurants();
@@ -86,9 +85,13 @@ class HomeScreenState extends State<MainScreen> {
                 delegate: SliverChildListDelegate([
                   const SizedBox(height: 20),
                   CustomAppBar(
-                    profileName: AppStrings.profileText,
-                    profileImage: AppImages.userProfile,
-                    location: "Lagos Nigeria",
+                    // Now fetches user data dynamically
+                    onNotificationPressed: () {
+                      // TODO: Implement notification screen navigation
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Notifications Tapped!')),
+                      );
+                    },
                   ),
                   SizedBox(height: 16),
                   SearchWithFilter(

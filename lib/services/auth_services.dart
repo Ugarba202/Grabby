@@ -114,6 +114,7 @@ class AuthService extends ChangeNotifier {
     required String name,
     required String email,
     required String password,
+    required String phone,
   }) async {
     try {
       // Step 1: Create user in Firebase Auth
@@ -134,7 +135,7 @@ class AuthService extends ChangeNotifier {
         'createdAt': FieldValue.serverTimestamp(),
         'emailVerified': false,
         'profilePicture': null,
-        'phone': null,
+        'phone': phone,
       });
 
       /// send otp Verificaion

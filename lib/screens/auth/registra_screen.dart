@@ -13,6 +13,7 @@ import 'package:grabby_app/screens/onboaring/widgets/phone_number_field.dart';
 import 'package:grabby_app/screens/onboaring/widgets/social_login_button.dart';
 import 'package:grabby_app/services/auth_services.dart';
 import '../../core/constant/app_images.dart';
+import '../../features/enable_location_screen.dart';
 import '../../services/storage_service.dart';
 
 /// Registration screen for new users
@@ -80,6 +81,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         name: fullName,
         email: email,
         password: password,
+        phone: phone,
       );
 
       setState(() => _isLoading = false);
@@ -97,11 +99,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
         // Navigate to verification screen
         if (mounted) {
-          // Navigate to the VerificationScreen, passing the email
-          Navigator.pushReplacementNamed(
+          Navigator.pushReplacement(
             context,
-            AppRoutes.main_screen,
-            // arguments: email,
+            MaterialPageRoute(
+              builder: (context) => const EnableLocationScreen(),
+            ),
           );
         }
       } else {

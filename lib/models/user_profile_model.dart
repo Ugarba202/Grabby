@@ -6,8 +6,11 @@ class UserProfileModel {
   String email;
   String? phoneNumber;
   String? profilePictureUrl;
+  String? address; // New
+  String? bio; // New
   Timestamp? createdAt;
   Timestamp? updatedAt;
+  GeoPoint? location;
 
   UserProfileModel({
     required this.uid,
@@ -15,8 +18,11 @@ class UserProfileModel {
     required this.email,
     this.phoneNumber,
     this.profilePictureUrl,
+    this.address,
+    this.bio,
     this.createdAt,
     this.updatedAt,
+    this.location,
   });
 
   // Factory constructor to create a UserProfileModel from a Firestore document
@@ -30,8 +36,11 @@ class UserProfileModel {
       email: data['email'] as String? ?? '',
       phoneNumber: data['phoneNumber'] as String?,
       profilePictureUrl: data['profilePictureUrl'] as String?,
+      address: data['address'] as String?,
+      bio: data['bio'] as String?,
       createdAt: data['createdAt'] as Timestamp?,
       updatedAt: data['updatedAt'] as Timestamp?,
+      location: data['location'] as GeoPoint?,
     );
   }
 
@@ -42,8 +51,11 @@ class UserProfileModel {
       'email': email,
       'phoneNumber': phoneNumber,
       'profilePictureUrl': profilePictureUrl,
+      'address': address,
+      'bio': bio,
       'createdAt': createdAt ?? FieldValue.serverTimestamp(),
       'updatedAt': FieldValue.serverTimestamp(),
+      'location': location,
     };
   }
 }
