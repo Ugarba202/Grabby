@@ -46,7 +46,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   void _navigateToNext() {
     // Short splash delay (animation is ~1.5s)
-    Timer(const Duration(seconds: 5), () {
+    Timer(const Duration(seconds: 2), () {
       if (!mounted) return;
 
       // Check onboarding status

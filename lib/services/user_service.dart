@@ -88,8 +88,6 @@ class UserService extends ChangeNotifier {
           data['phoneNumber'] ?? _userProfile!.phoneNumber;
       _userProfile!.profilePictureUrl =
           data['profilePictureUrl'] ?? _userProfile!.profilePictureUrl;
-      _userProfile!.phoneNumber =
-          data['phoneNumber'] ?? _userProfile!.phoneNumber;
       _userProfile!.address = data['address'] ?? _userProfile!.address;
       _userProfile!.bio = data['bio'] ?? _userProfile!.bio;
       _userProfile!.location = data['location'] ?? _userProfile!.location;

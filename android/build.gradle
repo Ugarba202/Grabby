@@ -9,7 +9,7 @@ buildscript {
 
     dependencies {
         // AGP (Android Gradle Plugin) version is compatible with Gradle 8.2 used by Flutter
-        classpath 'com.android.tools.build:gradle:8.4.0' 
+        classpath 'com.android.tools.build:gradle:8.9.1' 
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         
         // Google Services plugin for Firebase/Analytics setup
